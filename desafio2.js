@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { v4 as uuidv4 } from 'uuid';
 
 class ProductManager {
     constructor() {
@@ -18,16 +19,14 @@ class ProductManager {
     }
 
     getNewID(list) {
-        const count = list.length;
-        return count > 0 ? list[count - 1].id + 1 : 1;
+        return uuidv4();
     }
 
     async addProduct(title, description, price, code, stock) {
         const list = await this.read();
         const newID = this.getNewID(list);
-        const exists = this.existProduct(code, list);
-
-        if (!exists) {
+    
+        if (!this.existProduct(newID, list)) {
             const newProduct = {
                 id: newID,
                 title,
@@ -36,7 +35,7 @@ class ProductManager {
                 code,
                 stock,
             };
-
+    
             list.push(newProduct);
             await this.write(list);
             return newProduct;
@@ -44,7 +43,7 @@ class ProductManager {
             return 'Producto existente';
         }
     }
-
+    
     existProduct(code, list) {
         return list.some((el) => el.code === code);
     }
@@ -93,8 +92,7 @@ class ProductManager {
 
 const productManager = new ProductManager();
 const product1 = {
-    id: 1,
-    title: 'Caffe',
+    title: 'Caffe', 
     description: 'Importado',
     price: 2000,
     code: 6789,
@@ -102,7 +100,6 @@ const product1 = {
 };
 
 const product2 = {
-    id: 2,
     title: 'Azucar',
     description: 'Calidad alta',
     price: 800,

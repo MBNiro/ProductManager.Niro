@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 class ProductManager {
     constructor() {
         this.products = [];
@@ -5,7 +7,7 @@ class ProductManager {
 
     addProduct(title, description, price, code, stock) {
         const product = {
-            id: this.#getId() + 1,
+            id: uuidv4(),
             title,
             description,
             price,
@@ -51,7 +53,7 @@ class ProductManager {
         if(product){
             const newProduct = {
                 ...product,
-                id: this.#getId() + 1,
+                id: uuidv4(),
                 title: newTitle,
                 description: newDescription,
                 price: newPrice,
@@ -67,5 +69,5 @@ class ProductManager {
 const productManager = new ProductManager();
 
 productManager.addProduct('Cafe', 'Cafe negro importado de Colombia', 2500, 1243, 68 );
-productManager.productNew(1, 'Pan', 'Pan integral casero', 1700, 1244, 70)
+productManager.productNew('Pan', 'Pan integral casero', 1700, 1244, 70)
 console.log(productManager.getProducts());

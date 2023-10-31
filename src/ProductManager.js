@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { v4 as uuidv4 } from 'uuid'
 
 class ProductManager {
     constructor() {
@@ -19,37 +20,32 @@ class ProductManager {
     }
 
     getNewID(list) {
-        const count = list.length;
-        return count > 0 ? list[count - 1].id + 1 : 1;
-    }
-
-    existProduct = (code, list) => {
-        return ;
+        return uuidv4();
     }
 
     async addProduct(title, description, price, code, stock) {
-        const list = await this.getProductById();
+        const list = await this.getProducts();
         const newID = this.getNewID(list);
         const exists = list.some(el => el.code == code);
-
+    
         if (!exists) {
             const newProduct = {
-                id: newID,
+                id: newID, 
                 title,
                 description,
                 price,
                 code,
                 stock,
             };
-
+    
             list.push(newProduct);
             await this.write(list);
             return newProduct;
         } else {
-            return {error: `code: ${code} already exists`};
+            return { error: `code: ${code} already exists` };
         }
     }
-
+    
     existProduct(code, list) {
         return list.some((el) => el.code === code);
     }
@@ -96,30 +92,4 @@ class ProductManager {
     }
 }
 
-const productManager = new ProductManager();
-const product1 = {
-    id: 1,
-    title: 'Caffe',
-    description: 'Importado',
-    price: 2000,
-    code: 6789,
-    stock: 30,
-};
-
-const product2 = {
-    id: 2,
-    title: 'Azucar',
-    description: 'Calidad alta',
-    price: 800,
-    code: 6790,
-    stock: 23,
-};
-
-const test = async () => {
-    console.log('Primer consulta', await productManager.getProducts());
-    await productManager.addProduct(product1);
-    console.log('Segunda consulta', await productManager.getProducts());
-    await productManager.addProduct(product2);
-};
-
-test();
+module.exports = ProductManager;
